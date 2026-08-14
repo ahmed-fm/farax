@@ -53,7 +53,7 @@ export async function listDocuments(filters: DocFilters, userId?: string | null)
     .order("created_at", { ascending: false })
     .range((page - 1) * pageSize, page * pageSize - 1);
 
-  if (filters.level) query = query.eq("level", filters.level);
+  if (filters.level) query = query.eq("level", filters.level as "college");
   if (filters.subject) query = query.eq("subject", filters.subject);
   if (filters.category) query = query.eq("category", filters.category);
   if (filters.author) query = query.ilike("author_name", `%${filters.author}%`);
@@ -102,7 +102,7 @@ export async function signedUrl(path: string, expiresIn = 3600, download = false
 export async function registerView(documentId: string, position?: number) {
   await supabase.rpc("register_view", {
     _doc_id: documentId,
-    _position: position ?? null,
+    ...(position === undefined ? {} : { _position: position }),
   });
 }
 
@@ -164,7 +164,7 @@ export async function similarDocuments(doc: DocumentRow, limit = 6) {
     .select("*")
     .is("deleted_at", null)
     .eq("subject", doc.subject)
-    .eq("level", doc.level)
+    .eq("level", doc.level as "college")
     .neq("id", doc.id)
     .limit(limit);
   return (data ?? []) as DocumentRow[];
@@ -173,7 +173,7 @@ export async function similarDocuments(doc: DocumentRow, limit = 6) {
 export async function canDownload(documentId: string) {
   const { data } = await supabase.rpc("can_download_document", {
     _doc_id: documentId,
-    _user_id: (await supabase.auth.getUser()).data.user?.id ?? null,
+    _user_id: (await supabase.auth.getUser()).data.user?.id ?? "",
   });
   return Boolean(data);
 }
