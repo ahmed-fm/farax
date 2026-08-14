@@ -24,16 +24,16 @@ export type DocumentRow = {
 };
 
 export type DocFilters = {
-  level?: string;
-  subject?: string;
-  category?: string;
-  q?: string;
-  format?: string;
-  author?: string;
-  since?: string;
-  mine?: boolean;
-  page?: number;
-  pageSize?: number;
+  level?: string | undefined;
+  subject?: string | undefined;
+  category?: string | undefined;
+  q?: string | undefined;
+  format?: string | undefined;
+  author?: string | undefined;
+  since?: string | undefined;
+  mine?: boolean | undefined;
+  page?: number | undefined;
+  pageSize?: number | undefined;
 };
 
 const FORMAT_PREFIX: Record<string, string> = {
