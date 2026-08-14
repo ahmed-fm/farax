@@ -16,8 +16,8 @@ type Props = {
   mime: string;
   name: string;
   allowDownload: boolean;
-  initialPosition?: number | null;
-  onProgress?: (seconds: number) => void;
+  initialPosition?: number | null | undefined;
+  onProgress?: ((seconds: number) => void) | undefined;
 };
 
 export function DocumentViewer({
@@ -151,8 +151,8 @@ function VideoPlayer({
 }: {
   url: string;
   name: string;
-  initialPosition?: number | null;
-  onProgress?: (seconds: number) => void;
+  initialPosition?: number | null | undefined;
+  onProgress?: ((seconds: number) => void) | undefined;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [rate, setRate] = useState(1);
