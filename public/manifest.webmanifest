@@ -1,0 +1,9 @@
+{
+  "name": "Studia — Documents pédagogiques",
+  "short_name": "Studia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3949ab",
+  "icons": [{ "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }]
+}
