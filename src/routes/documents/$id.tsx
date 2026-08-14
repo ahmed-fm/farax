@@ -127,7 +127,7 @@ function DocumentPage() {
         <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_320px]">
           <div>
             <DocumentViewer
-              url={url ?? null}
+              url={url ?? undefined}
               mimeType={doc.mime_type}
               name={doc.name}
               onProgress={(position) => void registerView(doc.id, position)}

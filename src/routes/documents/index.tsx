@@ -18,29 +18,33 @@ import { CATEGORIES, LEVELS, SUBJECTS, categoryLabel, levelLabel, subjectLabel }
 import { useAuth } from "@/hooks/useAuth";
 
 type Search = {
-  q?: string;
-  level?: string;
-  subject?: string;
-  category?: string;
-  format?: string;
-  author?: string;
-  since?: string;
-  mine?: boolean;
-  page?: number;
+  q?: string | undefined;
+  level?: string | undefined;
+  subject?: string | undefined;
+  category?: string | undefined;
+  format?: string | undefined;
+  author?: string | undefined;
+  since?: string | undefined;
+  mine?: boolean | undefined;
+  page?: number | undefined;
 };
 
 export const Route = createFileRoute("/documents/")({
-  validateSearch: (search: Record<string, unknown>): Search => ({
-    q: typeof search.q === "string" && search.q ? search.q : undefined,
-    level: typeof search.level === "string" ? search.level : undefined,
-    subject: typeof search.subject === "string" ? search.subject : undefined,
-    category: typeof search.category === "string" ? search.category : undefined,
-    format: typeof search.format === "string" ? search.format : undefined,
-    author: typeof search.author === "string" ? search.author : undefined,
-    since: typeof search.since === "string" ? search.since : undefined,
-    mine: search.mine === true || search.mine === "true" ? true : undefined,
-    page: Number(search.page) > 1 ? Number(search.page) : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): Search => {
+    const str = (key: string) =>
+      typeof search[key] === "string" && search[key] ? (search[key] as string) : undefined;
+    return {
+      q: str("q"),
+      level: str("level"),
+      subject: str("subject"),
+      category: str("category"),
+      format: str("format"),
+      author: str("author"),
+      since: str("since"),
+      mine: search["mine"] === true || search["mine"] === "true" ? true : undefined,
+      page: Number(search["page"]) > 1 ? Number(search["page"]) : undefined,
+    };
+  },
   head: () => ({
     meta: [
       { title: "Documents pédagogiques — Studia" },
@@ -63,12 +67,12 @@ const PAGE_SIZE = 24;
 
 function DocumentsPage() {
   const search = Route.useSearch();
-  const navigate = useNavigate({ from: "/documents" });
+  const navigate = useNavigate({ from: "/documents/" });
   const { user } = useAuth();
 
   const setParam = (key: keyof Search, value?: string | boolean) =>
     navigate({
-      search: (prev) => ({ ...prev, [key]: value || undefined, page: undefined }),
+      search: (prev: Search) => ({ ...prev, [key]: value || undefined, page: undefined }),
     });
 
   const page = search.page ?? 1;
@@ -208,7 +212,7 @@ function DocumentsPage() {
                   variant="outline"
                   disabled={page <= 1}
                   onClick={() =>
-                    void navigate({ search: (prev) => ({ ...prev, page: page - 1 || undefined }) })
+                    void navigate({ search: (prev: Search) => ({ ...prev, page: page - 1 || undefined }) })
                   }
                 >
                   Précédent
@@ -219,7 +223,7 @@ function DocumentsPage() {
                 <Button
                   variant="outline"
                   disabled={page >= pages}
-                  onClick={() => void navigate({ search: (prev) => ({ ...prev, page: page + 1 }) })}
+                  onClick={() => void navigate({ search: (prev: Search) => ({ ...prev, page: page + 1 }) })}
                 >
                   Suivant
                 </Button>
