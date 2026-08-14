@@ -126,12 +126,19 @@ function DocumentPage() {
 
         <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_320px]">
           <div>
-            <DocumentViewer
-              url={url ?? undefined}
-              mimeType={doc.mime_type}
-              name={doc.name}
-              onProgress={(position) => void registerView(doc.id, position)}
-            />
+            {url ? (
+              <DocumentViewer
+                url={url}
+                mime={doc.mime_type}
+                name={doc.name}
+                allowDownload={doc.allow_download}
+                onProgress={(position) => void registerView(doc.id, position)}
+              />
+            ) : (
+              <div className="surface-card flex h-96 items-center justify-center">
+                <Loader2 className="size-6 animate-spin text-muted-foreground" />
+              </div>
+            )}
           </div>
 
           <aside className="space-y-4">
