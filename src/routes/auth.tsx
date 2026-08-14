@@ -48,7 +48,10 @@ function AuthPage() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Bienvenue !");
     void navigate({ to: "/" });
   };
@@ -65,7 +68,10 @@ function AuthPage() {
       },
     });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Compte créé. Vous pouvez vous connecter.");
   };
 
@@ -73,7 +79,10 @@ function AuthPage() {
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
-    if (result.error) return toast.error("Connexion Google impossible");
+    if (result.error) {
+      toast.error("Connexion Google impossible");
+      return;
+    }
     if (result.redirected) return;
     void navigate({ to: "/" });
   };
