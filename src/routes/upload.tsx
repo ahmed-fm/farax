@@ -62,9 +62,9 @@ type QueueItem = {
   title: string;
   progress: number;
   status: QueueStatus;
-  error?: string;
-  documentId?: string;
-  handle?: UploadHandle;
+  error?: string | undefined;
+  documentId?: string | undefined;
+  handle?: UploadHandle | undefined;
 };
 
 function UploadPage() {
