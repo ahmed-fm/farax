@@ -183,8 +183,12 @@ export const setUserPermission = createServerFn({ method: "POST" })
 export const adminStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("is_admin_self");
-    if (!isAdmin) throw new Error("FORBIDDEN");
+    const { data: roles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    if (!(roles ?? []).some((r) => r.role === "admin")) throw new Error("FORBIDDEN");
+
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const [users, docs, logs, storage] = await Promise.all([
