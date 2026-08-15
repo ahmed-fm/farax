@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { getFileUrl, deleteDocument } from "@/lib/files.functions";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Download, Eye, Heart, Loader2, Share2 } from "lucide-react";
 import { toast } from "sonner";
@@ -11,9 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   getDocument,
   isFavorite,
-  logAccess,
   registerView,
-  signedUrl,
   similarDocuments,
   toggleFavorite,
 } from "@/lib/documents";
@@ -42,17 +42,23 @@ export const Route = createFileRoute("/documents/$id")({
 function DocumentPage() {
   const { id } = Route.useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [fav, setFav] = useState(false);
+
+  const fetchUrl = useServerFn(getFileUrl);
+  const removeDocument = useServerFn(deleteDocument);
 
   const { data: doc, isLoading } = useQuery({
     queryKey: ["document", id],
     queryFn: () => getDocument(id),
   });
 
+  // The signed URL is issued by the server only after a permission check.
   const { data: url } = useQuery({
-    queryKey: ["document-url", doc?.storage_path],
-    queryFn: () => signedUrl(doc!.storage_path),
-    enabled: Boolean(doc?.storage_path),
+    queryKey: ["document-url", id],
+    queryFn: async () => (await fetchUrl({ data: { documentId: id } })).url,
+    enabled: Boolean(doc),
+    staleTime: 10 * 60 * 1000,
   });
 
   const { data: similar } = useQuery({
@@ -70,18 +76,28 @@ function DocumentPage() {
 
   const download = async () => {
     if (!doc) return;
-    if (!doc.allow_download) {
-      toast.error("Le téléchargement est désactivé pour ce document.");
-      return;
-    }
     try {
-      const link = await signedUrl(doc.storage_path, 300, true);
-      if (user) void logAccess(doc.id, "download", user.id);
-      window.open(link, "_blank");
+      const result = await fetchUrl({ data: { documentId: doc.id, download: true } });
+      window.open(result.url, "_blank");
     } catch {
-      toast.error("Téléchargement impossible : droits insuffisants.");
+      toast.error("Téléchargement refusé : droits insuffisants.");
     }
   };
+
+  const destroy = async () => {
+    if (!doc) return;
+    if (!window.confirm("Supprimer définitivement ce document et son fichier ?")) return;
+    try {
+      await removeDocument({ data: { documentId: doc.id } });
+      toast.success("Document supprimé");
+      void navigate({ to: "/documents" });
+    } catch {
+      toast.error("Suppression refusée : droits insuffisants.");
+    }
+  };
+
+  const canManage = Boolean(user && doc && doc.author_id === user.id);
+
 
   const share = async () => {
     await navigator.clipboard.writeText(window.location.href);
@@ -132,6 +148,7 @@ function DocumentPage() {
                 mime={doc.mime_type}
                 name={doc.name}
                 allowDownload={doc.allow_download}
+                onDownload={() => void download()}
                 onProgress={(position) => void registerView(doc.id, position)}
               />
             ) : (
@@ -173,9 +190,14 @@ function DocumentPage() {
               ) : null}
 
               <div className="mt-5 grid gap-2">
-                <Button onClick={() => void download()} disabled={!doc.allow_download}>
+                <Button onClick={() => void download()}>
                   <Download className="mr-2 size-4" /> Télécharger
                 </Button>
+                {canManage ? (
+                  <Button variant="outline" onClick={() => void destroy()}>
+                    Supprimer ce document
+                  </Button>
+                ) : null}
                 <div className="grid grid-cols-2 gap-2">
                   <Button variant="outline" onClick={() => void share()}>
                     <Share2 className="mr-2 size-4" /> Partager
