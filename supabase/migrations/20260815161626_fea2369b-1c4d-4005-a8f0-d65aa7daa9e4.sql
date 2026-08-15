@@ -1,0 +1,10 @@
+REVOKE EXECUTE ON FUNCTION public.can_read_document(uuid, uuid) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.is_admin(uuid) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.is_group_member(uuid, uuid) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.owns_document(uuid, uuid) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.can_download_document(uuid, uuid) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.register_view(uuid, numeric) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.can_download_document(uuid, uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.register_view(uuid, numeric) TO authenticated;
