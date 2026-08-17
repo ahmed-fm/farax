@@ -12,6 +12,7 @@ export type DocumentRow = {
   level: string;
   subject: string;
   category: string;
+  chapter: string | null;
   tags: string[];
   author_id: string;
   author_name: string | null;
@@ -27,6 +28,7 @@ export type DocFilters = {
   level?: string | undefined;
   subject?: string | undefined;
   category?: string | undefined;
+  chapter?: string | undefined;
   q?: string | undefined;
   format?: string | undefined;
   author?: string | undefined;
@@ -56,6 +58,7 @@ export async function listDocuments(filters: DocFilters, userId?: string | null)
   if (filters.level) query = query.eq("level", filters.level as "college");
   if (filters.subject) query = query.eq("subject", filters.subject);
   if (filters.category) query = query.eq("category", filters.category);
+  if (filters.chapter) query = query.eq("chapter", filters.chapter);
   if (filters.author) query = query.ilike("author_name", `%${filters.author}%`);
   if (filters.since) query = query.gte("created_at", filters.since);
   if (filters.mine && userId) query = query.eq("author_id", userId);
@@ -176,4 +179,15 @@ export async function canDownload(documentId: string) {
     _user_id: (await supabase.auth.getUser()).data.user?.id ?? "",
   });
   return Boolean(data);
+}
+
+export async function listMyDocuments(userId: string) {
+  const { data, error } = await supabase
+    .from("documents")
+    .select("*")
+    .is("deleted_at", null)
+    .eq("author_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as DocumentRow[];
 }
