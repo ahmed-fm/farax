@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.register_view(uuid, numeric) FROM authenticated, anon, PUBLIC;
