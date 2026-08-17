@@ -159,9 +159,18 @@ export function AppLayout({ children }: { children: ReactNode }) {
             ) : null}
           </form>
 
+          {user && canUpload(role) ? (
+            <Button asChild size="sm" className="hidden sm:inline-flex">
+              <Link to="/upload">
+                <Upload className="mr-2 size-4" /> Importer
+              </Link>
+            </Button>
+          ) : null}
+
           <Button variant="ghost" size="icon" onClick={toggle} aria-label="Thème">
             {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
           </Button>
+
 
           {user ? (
             <div className="flex items-center gap-2">
