@@ -3,6 +3,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   BookOpen,
   Compass,
+  FolderTree,
   GraduationCap,
   Home,
   LogOut,
@@ -71,6 +72,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
       <div className="space-y-1">
         {item("/", "Tableau de bord", Home)}
         {item("/documents", "Tous les documents", BookOpen)}
+        {item("/library", "Ma bibliothèque", FolderTree)}
         {item("/favorites", "Favoris", Star)}
         {canUpload(role) ? item("/upload", "Importer", Upload) : null}
         {item("/groups", "Classes", Users)}
