@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as GroupsRouteImport } from './routes/groups'
+import { Route as LibraryRouteImport } from './routes/library'
 import { Route as UploadRouteImport } from './routes/upload'
 import { Route as DocumentsIndexRouteImport } from './routes/documents/index'
 import { Route as DocumentsIdRouteImport } from './routes/documents/$id'
@@ -43,6 +44,11 @@ const GroupsRoute = GroupsRouteImport.update({
   path: '/groups',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UploadRoute = UploadRouteImport.update({
   id: '/upload',
   path: '/upload',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/library': typeof LibraryRoute
   '/upload': typeof UploadRoute
   '/documents/$id': typeof DocumentsIdRoute
   '/documents/': typeof DocumentsIndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/library': typeof LibraryRoute
   '/upload': typeof UploadRoute
   '/documents/$id': typeof DocumentsIdRoute
   '/documents': typeof DocumentsIndexRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/groups': typeof GroupsRoute
+  '/library': typeof LibraryRoute
   '/upload': typeof UploadRoute
   '/documents/$id': typeof DocumentsIdRoute
   '/documents/': typeof DocumentsIndexRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favorites'
     | '/groups'
+    | '/library'
     | '/upload'
     | '/documents/$id'
     | '/documents/'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favorites'
     | '/groups'
+    | '/library'
     | '/upload'
     | '/documents/$id'
     | '/documents'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favorites'
     | '/groups'
+    | '/library'
     | '/upload'
     | '/documents/$id'
     | '/documents/'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   FavoritesRoute: typeof FavoritesRoute
   GroupsRoute: typeof GroupsRoute
+  LibraryRoute: typeof LibraryRoute
   UploadRoute: typeof UploadRoute
   DocumentsIdRoute: typeof DocumentsIdRoute
   DocumentsIndexRoute: typeof DocumentsIndexRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GroupsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/upload': {
       id: '/upload'
       path: '/upload'
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   FavoritesRoute: FavoritesRoute,
   GroupsRoute: GroupsRoute,
+  LibraryRoute: LibraryRoute,
   UploadRoute: UploadRoute,
   DocumentsIdRoute: DocumentsIdRoute,
   DocumentsIndexRoute: DocumentsIndexRoute,
