@@ -67,6 +67,45 @@ export type Database = {
         }
         Relationships: []
       }
+      document_groups: {
+        Row: {
+          can_download: boolean
+          created_at: string
+          document_id: string
+          group_id: string
+          id: string
+        }
+        Insert: {
+          can_download?: boolean
+          created_at?: string
+          document_id: string
+          group_id: string
+          id?: string
+        }
+        Update: {
+          can_download?: boolean
+          created_at?: string
+          document_id?: string
+          group_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_groups_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_groups_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       document_permissions: {
         Row: {
           can_delete: boolean
@@ -127,6 +166,7 @@ export type Database = {
           author_id: string
           author_name: string | null
           category: string
+          chapter: string | null
           created_at: string
           deleted_at: string | null
           description: string | null
@@ -136,6 +176,7 @@ export type Database = {
           mime_type: string
           name: string
           school_year: string | null
+          search_vector: unknown
           size: number
           storage_path: string
           subject: string
@@ -150,6 +191,7 @@ export type Database = {
           author_id: string
           author_name?: string | null
           category: string
+          chapter?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
@@ -159,6 +201,7 @@ export type Database = {
           mime_type: string
           name: string
           school_year?: string | null
+          search_vector?: unknown
           size?: number
           storage_path: string
           subject: string
@@ -173,6 +216,7 @@ export type Database = {
           author_id?: string
           author_name?: string | null
           category?: string
+          chapter?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
@@ -182,6 +226,7 @@ export type Database = {
           mime_type?: string
           name?: string
           school_year?: string | null
+          search_vector?: unknown
           size?: number
           storage_path?: string
           subject?: string
@@ -227,18 +272,21 @@ export type Database = {
           created_at: string
           group_id: string
           id: string
+          member_role: Database["public"]["Enums"]["group_member_role"]
           user_id: string
         }
         Insert: {
           created_at?: string
           group_id: string
           id?: string
+          member_role?: Database["public"]["Enums"]["group_member_role"]
           user_id: string
         }
         Update: {
           created_at?: string
           group_id?: string
           id?: string
+          member_role?: Database["public"]["Enums"]["group_member_role"]
           user_id?: string
         }
         Relationships: [
@@ -259,6 +307,8 @@ export type Database = {
           id: string
           level: Database["public"]["Enums"]["school_level"]
           name: string
+          parent_id: string | null
+          slug: string | null
         }
         Insert: {
           created_at?: string
@@ -267,6 +317,8 @@ export type Database = {
           id?: string
           level: Database["public"]["Enums"]["school_level"]
           name: string
+          parent_id?: string | null
+          slug?: string | null
         }
         Update: {
           created_at?: string
@@ -275,8 +327,18 @@ export type Database = {
           id?: string
           level?: Database["public"]["Enums"]["school_level"]
           name?: string
+          parent_id?: string | null
+          slug?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "groups_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -388,6 +450,10 @@ export type Database = {
         Args: { _doc_id: string; _user_id: string }
         Returns: boolean
       }
+      can_edit_document: {
+        Args: { _doc_id: string; _user_id: string }
+        Returns: boolean
+      }
       can_read_document: {
         Args: { _doc_id: string; _user_id: string }
         Returns: boolean
@@ -422,6 +488,7 @@ export type Database = {
         | "group"
         | "level"
         | "subject"
+      group_member_role: "student" | "teacher"
       school_level: "college" | "lycee" | "universite"
     }
     CompositeTypes: {
@@ -559,6 +626,7 @@ export const Constants = {
         "level",
         "subject",
       ],
+      group_member_role: ["student", "teacher"],
       school_level: ["college", "lycee", "universite"],
     },
   },

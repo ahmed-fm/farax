@@ -3,6 +3,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   BookOpen,
   Compass,
+  FolderTree,
   GraduationCap,
   Home,
   LogOut,
@@ -71,6 +72,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
       <div className="space-y-1">
         {item("/", "Tableau de bord", Home)}
         {item("/documents", "Tous les documents", BookOpen)}
+        {item("/library", "Ma bibliothèque", FolderTree)}
         {item("/favorites", "Favoris", Star)}
         {canUpload(role) ? item("/upload", "Importer", Upload) : null}
         {item("/groups", "Classes", Users)}
@@ -157,9 +159,18 @@ export function AppLayout({ children }: { children: ReactNode }) {
             ) : null}
           </form>
 
+          {user && canUpload(role) ? (
+            <Button asChild size="sm" className="hidden sm:inline-flex">
+              <Link to="/upload">
+                <Upload className="mr-2 size-4" /> Importer
+              </Link>
+            </Button>
+          ) : null}
+
           <Button variant="ghost" size="icon" onClick={toggle} aria-label="Thème">
             {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
           </Button>
+
 
           {user ? (
             <div className="flex items-center gap-2">

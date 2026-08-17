@@ -97,4 +97,5 @@ export function useAuth() {
   return ctx;
 }
 
-export const canUpload = (role: AppRole) => role === "admin" || role === "teacher";
+export const canUpload = (role: AppRole) =>
+  role === "admin" || role === "teacher" || role === "student";

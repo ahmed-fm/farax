@@ -56,6 +56,7 @@ function UploadPage() {
   const [level, setLevel] = useState("lycee");
   const [subject, setSubject] = useState("mathematiques");
   const [category, setCategory] = useState("cours");
+  const [chapter, setChapter] = useState("");
   const [schoolYear, setSchoolYear] = useState("");
   const [visibility, setVisibility] = useState("private");
   const [allowDownload, setAllowDownload] = useState(true);
@@ -120,6 +121,7 @@ function UploadPage() {
         level: level as "college",
         subject,
         category,
+        chapter: chapter.trim() || null,
         tags,
         author_id: user.id,
         author_name: profile?.full_name ?? user.email ?? null,
@@ -146,7 +148,7 @@ function UploadPage() {
         <div className="mx-auto max-w-md px-4 py-24 text-center">
           <h1 className="font-display text-xl font-semibold">Accès réservé</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Seuls les enseignants et administrateurs peuvent importer des documents.
+            Connectez-vous pour importer des documents.
           </p>
         </div>
       </AppLayout>
@@ -229,6 +231,15 @@ function UploadPage() {
             <Field label="Niveau" value={level} onChange={setLevel} options={LEVELS} />
             <Field label="Matière" value={subject} onChange={setSubject} options={SUBJECTS} />
             <Field label="Type de contenu" value={category} onChange={setCategory} options={CATEGORIES} />
+            <div className="space-y-2">
+              <Label htmlFor="chapter">Chapitre</Label>
+              <Input
+                id="chapter"
+                placeholder="ex. Chapitre 3 — Dérivation"
+                value={chapter}
+                onChange={(e) => setChapter(e.target.value)}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="year">Année scolaire</Label>
               <Input
