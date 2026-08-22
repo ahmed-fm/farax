@@ -43,10 +43,12 @@ function AuthPage() {
     if (user) void navigate({ to: "/" });
   }, [user, navigate]);
 
-  const signIn = async (e?: React.FormEvent) => {
+  const signIn = async (e?: React.FormEvent, creds?: { email: string; password: string }) => {
     e?.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const signInEmail = creds?.email ?? email;
+    const signInPassword = creds?.password ?? password;
+    const { error } = await supabase.auth.signInWithPassword({ email: signInEmail, password: signInPassword });
     setLoading(false);
     if (error) {
       toast.error(error.message);
