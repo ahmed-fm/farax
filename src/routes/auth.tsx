@@ -184,6 +184,18 @@ function AuthPage() {
           <Button variant="outline" className="h-11 w-full" onClick={() => void google()}>
             Continuer avec Google
           </Button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setEmail("code@code.midil");
+              setPassword("code.midil");
+              toast.info("Compte de démonstration pré-rempli");
+            }}
+            className="mt-4 w-full rounded-lg border border-dashed border-border px-3 py-2 text-xs text-muted-foreground hover:bg-muted"
+          >
+            Compte par défaut : code@code.midil / code.midil
+          </button>
         </div>
       </div>
     </div>
