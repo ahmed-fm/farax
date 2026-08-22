@@ -191,9 +191,10 @@ function AuthPage() {
             type="button"
             disabled={loading}
             onClick={() => {
-              setEmail("code@code.midil");
-              setPassword("code.midil");
-              setTimeout(() => void signIn(), 0);
+              const creds = { email: "code@code.midil", password: "code.midil" };
+              setEmail(creds.email);
+              setPassword(creds.password);
+              void signIn(undefined, creds);
             }}
             className="mt-4 w-full rounded-lg border border-dashed border-border px-3 py-2 text-xs text-muted-foreground hover:bg-muted disabled:opacity-50"
           >
