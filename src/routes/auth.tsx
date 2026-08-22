@@ -43,10 +43,12 @@ function AuthPage() {
     if (user) void navigate({ to: "/" });
   }, [user, navigate]);
 
-  const signIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const signIn = async (e?: React.FormEvent, creds?: { email: string; password: string }) => {
+    e?.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const signInEmail = creds?.email ?? email;
+    const signInPassword = creds?.password ?? password;
+    const { error } = await supabase.auth.signInWithPassword({ email: signInEmail, password: signInPassword });
     setLoading(false);
     if (error) {
       toast.error(error.message);
@@ -187,14 +189,16 @@ function AuthPage() {
 
           <button
             type="button"
+            disabled={loading}
             onClick={() => {
-              setEmail("code@code.midil");
-              setPassword("code.midil");
-              toast.info("Compte de démonstration pré-rempli");
+              const creds = { email: "code@code.midil", password: "code.midil" };
+              setEmail(creds.email);
+              setPassword(creds.password);
+              void signIn(undefined, creds);
             }}
-            className="mt-4 w-full rounded-lg border border-dashed border-border px-3 py-2 text-xs text-muted-foreground hover:bg-muted"
+            className="mt-4 w-full rounded-lg border border-dashed border-border px-3 py-2 text-xs text-muted-foreground hover:bg-muted disabled:opacity-50"
           >
-            Compte par défaut : code@code.midil / code.midil
+            {loading ? "Connexion…" : "Compte par défaut : code@code.midil / code.midil"}
           </button>
         </div>
       </div>
