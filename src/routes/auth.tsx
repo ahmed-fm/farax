@@ -43,8 +43,8 @@ function AuthPage() {
     if (user) void navigate({ to: "/" });
   }, [user, navigate]);
 
-  const signIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const signIn = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
