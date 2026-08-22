@@ -166,6 +166,7 @@ export type Database = {
           author_id: string
           author_name: string | null
           category: string
+          chapter: string | null
           created_at: string
           deleted_at: string | null
           description: string | null
@@ -190,6 +191,7 @@ export type Database = {
           author_id: string
           author_name?: string | null
           category: string
+          chapter?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
@@ -214,6 +216,7 @@ export type Database = {
           author_id?: string
           author_name?: string | null
           category?: string
+          chapter?: string | null
           created_at?: string
           deleted_at?: string | null
           description?: string | null
