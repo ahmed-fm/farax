@@ -187,14 +187,15 @@ function AuthPage() {
 
           <button
             type="button"
+            disabled={loading}
             onClick={() => {
               setEmail("code@code.midil");
               setPassword("code.midil");
-              toast.info("Compte de démonstration pré-rempli");
+              setTimeout(() => void signIn(), 0);
             }}
-            className="mt-4 w-full rounded-lg border border-dashed border-border px-3 py-2 text-xs text-muted-foreground hover:bg-muted"
+            className="mt-4 w-full rounded-lg border border-dashed border-border px-3 py-2 text-xs text-muted-foreground hover:bg-muted disabled:opacity-50"
           >
-            Compte par défaut : code@code.midil / code.midil
+            {loading ? "Connexion…" : "Compte par défaut : code@code.midil / code.midil"}
           </button>
         </div>
       </div>
