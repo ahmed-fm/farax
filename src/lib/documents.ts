@@ -100,9 +100,9 @@ export async function signedUrl(path: string, expiresIn = 3600, download = false
 }
 
 export async function registerView(documentId: string, position?: number) {
-  await supabase.rpc("register_view", {
-    _doc_id: documentId,
-    ...(position === undefined ? {} : { _position: position }),
+  const { registerViewFn } = await import("@/lib/views.functions");
+  await registerViewFn({
+    data: { documentId, ...(position === undefined ? {} : { position }) },
   });
 }
 
