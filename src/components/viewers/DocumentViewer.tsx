@@ -40,7 +40,13 @@ export function DocumentViewer({
   const kind = fileKind(mime);
 
   if (kind === "pdf") {
-    return <PdfViewer url={url} name={name} allowDownload={allowDownload} onDownload={onDownload} />;
+    return (
+      <ClientOnly fallback={<ViewerFallback />}>
+        <Suspense fallback={<ViewerFallback />}>
+          <PdfViewer url={url} name={name} allowDownload={allowDownload} onDownload={onDownload} />
+        </Suspense>
+      </ClientOnly>
+    );
   }
 
   if (kind === "image") {
