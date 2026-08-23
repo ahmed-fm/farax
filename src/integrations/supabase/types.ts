@@ -450,34 +450,6 @@ export type Database = {
         Args: { _doc_id: string; _user_id: string }
         Returns: boolean
       }
-      can_edit_document: {
-        Args: { _doc_id: string; _user_id: string }
-        Returns: boolean
-      }
-      can_read_document: {
-        Args: { _doc_id: string; _user_id: string }
-        Returns: boolean
-      }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      is_admin: { Args: { _user_id: string }; Returns: boolean }
-      is_group_member: {
-        Args: { _group_id: string; _user_id: string }
-        Returns: boolean
-      }
-      owns_document: {
-        Args: { _doc_id: string; _user_id: string }
-        Returns: boolean
-      }
-      register_view: {
-        Args: { _doc_id: string; _position?: number }
-        Returns: undefined
-      }
     }
     Enums: {
       app_role: "admin" | "teacher" | "student" | "guest"
