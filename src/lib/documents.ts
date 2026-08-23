@@ -171,9 +171,9 @@ export async function similarDocuments(doc: DocumentRow, limit = 6) {
 }
 
 export async function canDownload(documentId: string) {
-  const { data } = await supabase.rpc("can_download_document", {
-    _doc_id: documentId,
-    _user_id: (await supabase.auth.getUser()).data.user?.id ?? "",
-  });
-  return Boolean(data);
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) return false;
+  const { canDownloadFn } = await import("@/lib/views.functions");
+  const { allowed } = await canDownloadFn({ data: { documentId } });
+  return allowed;
 }
