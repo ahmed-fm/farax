@@ -1,10 +1,22 @@
-import { useEffect, useState } from "react";
-import { Download, ExternalLink, FileType2 } from "lucide-react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { ClientOnly } from "@tanstack/react-router";
+import { Download, ExternalLink, FileType2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fileKind } from "@/lib/taxonomy";
-import { PdfViewer } from "./PdfViewer";
 import { ImageViewer } from "./ImageViewer";
 import { VideoPlayer } from "./VideoPlayer";
+
+// pdf.js touches browser-only globals (DOMMatrix), so it must never be
+// imported during SSR.
+const PdfViewer = lazy(() => import("./PdfViewer").then((m) => ({ default: m.PdfViewer })));
+
+function ViewerFallback() {
+  return (
+    <div className="surface-card flex h-[60vh] items-center justify-center">
+      <Loader2 className="size-6 animate-spin text-muted-foreground" />
+    </div>
+  );
+}
 
 type Props = {
   url: string;
@@ -28,7 +40,13 @@ export function DocumentViewer({
   const kind = fileKind(mime);
 
   if (kind === "pdf") {
-    return <PdfViewer url={url} name={name} allowDownload={allowDownload} onDownload={onDownload} />;
+    return (
+      <ClientOnly fallback={<ViewerFallback />}>
+        <Suspense fallback={<ViewerFallback />}>
+          <PdfViewer url={url} name={name} allowDownload={allowDownload} onDownload={onDownload} />
+        </Suspense>
+      </ClientOnly>
+    );
   }
 
   if (kind === "image") {
