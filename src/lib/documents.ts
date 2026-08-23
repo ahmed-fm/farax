@@ -100,9 +100,9 @@ export async function signedUrl(path: string, expiresIn = 3600, download = false
 }
 
 export async function registerView(documentId: string, position?: number) {
-  await supabase.rpc("register_view", {
-    _doc_id: documentId,
-    ...(position === undefined ? {} : { _position: position }),
+  const { registerViewFn } = await import("@/lib/views.functions");
+  await registerViewFn({
+    data: { documentId, ...(position === undefined ? {} : { position }) },
   });
 }
 
@@ -171,9 +171,9 @@ export async function similarDocuments(doc: DocumentRow, limit = 6) {
 }
 
 export async function canDownload(documentId: string) {
-  const { data } = await supabase.rpc("can_download_document", {
-    _doc_id: documentId,
-    _user_id: (await supabase.auth.getUser()).data.user?.id ?? "",
-  });
-  return Boolean(data);
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) return false;
+  const { canDownloadFn } = await import("@/lib/views.functions");
+  const { allowed } = await canDownloadFn({ data: { documentId } });
+  return allowed;
 }
