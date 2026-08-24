@@ -85,6 +85,57 @@ function UploadPage() {
   const [tagsInput, setTagsInput] = useState("");
   const [visibility, setVisibility] = useState<string>("users");
   const [allowDownload, setAllowDownload] = useState(true);
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [youtubeTitle, setYoutubeTitle] = useState("");
+
+  const addYoutube = async () => {
+    if (!user) return;
+    const videoId = youtubeId(youtubeUrl);
+    if (!videoId) {
+      toast.error("Lien YouTube invalide.");
+      return;
+    }
+    const title = youtubeTitle.trim() || `Vidéo YouTube ${videoId}`;
+    const tags = tagsInput
+      .split(",")
+      .map((tag) => tag.trim().toLowerCase())
+      .filter(Boolean);
+
+    setBusy(true);
+    const { data, error } = await supabase
+      .from("documents")
+      .insert({
+        name: title,
+        filename: `${videoId}.youtube`,
+        mime_type: YOUTUBE_MIME,
+        size: 0,
+        storage_path: `https://www.youtube.com/watch?v=${videoId}`,
+        description: description.trim() || null,
+        level: level as "college",
+        subject,
+        category,
+        tags,
+        author_id: user.id,
+        author_name: profile?.full_name ?? user.email ?? null,
+        school_year: schoolYear || null,
+        visibility: visibility as "private",
+        allow_download: false,
+      })
+      .select("id")
+      .single();
+    setBusy(false);
+
+    if (error || !data) {
+      toast.error(error?.message ?? "Enregistrement impossible");
+      return;
+    }
+    setYoutubeUrl("");
+    setYoutubeTitle("");
+    toast.success("Vidéo YouTube ajoutée");
+    void navigate({ to: "/documents/$id", params: { id: data.id } });
+  };
+
+
 
   const patch = (id: string, next: Partial<QueueItem>) =>
     setItems((list) => list.map((item) => (item.id === id ? { ...item, ...next } : item)));
