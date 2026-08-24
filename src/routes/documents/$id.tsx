@@ -17,7 +17,14 @@ import {
   similarDocuments,
   toggleFavorite,
 } from "@/lib/documents";
-import { categoryLabel, formatDate, formatSize, levelLabel, subjectLabel } from "@/lib/taxonomy";
+import {
+  YOUTUBE_MIME,
+  categoryLabel,
+  formatDate,
+  formatSize,
+  levelLabel,
+  subjectLabel,
+} from "@/lib/taxonomy";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/documents/$id")({
