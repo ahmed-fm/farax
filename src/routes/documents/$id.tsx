@@ -53,13 +53,18 @@ function DocumentPage() {
     queryFn: () => getDocument(id),
   });
 
+  // YouTube documents store their public URL directly; no signed URL needed.
+  const isYoutube = doc?.mime_type === YOUTUBE_MIME;
+
   // The signed URL is issued by the server only after a permission check.
-  const { data: url } = useQuery({
+  const { data: signedUrl } = useQuery({
     queryKey: ["document-url", id],
     queryFn: async () => (await fetchUrl({ data: { documentId: id } })).url,
-    enabled: Boolean(doc),
+    enabled: Boolean(doc) && !isYoutube,
     staleTime: 10 * 60 * 1000,
   });
+
+  const url = isYoutube ? doc?.storage_path : signedUrl;
 
   const { data: similar } = useQuery({
     queryKey: ["similar", doc?.id],
