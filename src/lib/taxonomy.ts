@@ -65,9 +65,20 @@ export const ACCEPTED_MIME = [
 
 export const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200 Mo
 
-export type FileKind = "pdf" | "image" | "video" | "office" | "text" | "archive" | "other";
+export type FileKind =
+  | "pdf"
+  | "image"
+  | "video"
+  | "youtube"
+  | "office"
+  | "text"
+  | "archive"
+  | "other";
+
+export const YOUTUBE_MIME = "video/x-youtube";
 
 export function fileKind(mime: string): FileKind {
+  if (mime === YOUTUBE_MIME) return "youtube";
   if (mime === "application/pdf") return "pdf";
   if (mime.startsWith("image/")) return "image";
   if (mime.startsWith("video/")) return "video";
