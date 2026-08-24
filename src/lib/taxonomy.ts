@@ -6,6 +6,23 @@ export const LEVELS: { value: SchoolLevel; label: string }[] = [
   { value: "universite", label: "Université" },
 ];
 
+/** Classes (niveaux) de chaque établissement. */
+export const GRADES: { value: string; label: string; level: SchoolLevel }[] = [
+  { value: "6eme", label: "6ème", level: "college" },
+  { value: "5eme", label: "5ème", level: "college" },
+  { value: "4eme", label: "4ème", level: "college" },
+  { value: "3eme", label: "3ème", level: "college" },
+  { value: "seconde", label: "Seconde", level: "lycee" },
+  { value: "premiere", label: "Première", level: "lycee" },
+  { value: "terminale", label: "Terminale", level: "lycee" },
+];
+
+export const gradesForLevel = (level?: string | null) =>
+  GRADES.filter((grade) => grade.level === level);
+
+export const gradeLabel = (value?: string | null) =>
+  GRADES.find((grade) => grade.value === value)?.label ?? value ?? "—";
+
 export const SUBJECTS = [
   { value: "mathematiques", label: "Mathématiques" },
   { value: "physique", label: "Physique" },
