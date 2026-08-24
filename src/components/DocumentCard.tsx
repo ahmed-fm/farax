@@ -15,6 +15,7 @@ const ICONS = {
   pdf: FileText,
   image: FileImage,
   video: FileVideo,
+  youtube: Youtube,
   office: FileType2,
   text: FileText,
   archive: FileArchive,
