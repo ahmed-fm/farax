@@ -280,6 +280,39 @@ function UploadPage() {
           />
         </div>
 
+        <div className="surface-card mt-4 p-4">
+          <Label htmlFor="youtube-url" className="flex items-center gap-2">
+            <Youtube className="size-4 text-muted-foreground" /> Vidéo YouTube (intégrée)
+          </Label>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Collez un lien YouTube : la vidéo sera consultable directement dans le lecteur, avec les
+            mêmes métadonnées et droits que ci-dessous.
+          </p>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <Input
+              id="youtube-url"
+              value={youtubeUrl}
+              placeholder="https://www.youtube.com/watch?v=..."
+              onChange={(event) => setYoutubeUrl(event.target.value)}
+            />
+            <Input
+              value={youtubeTitle}
+              placeholder="Titre de la vidéo"
+              onChange={(event) => setYoutubeTitle(event.target.value)}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy || !youtubeUrl.trim()}
+              onClick={() => void addYoutube()}
+            >
+              Ajouter
+            </Button>
+          </div>
+        </div>
+
+
+
         {items.length ? (
           <ul className="mt-4 space-y-2">
             {items.map((item) => (
