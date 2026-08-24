@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { CloudUpload, Loader2, X, CheckCircle2, AlertCircle, Ban } from "lucide-react";
+import { CloudUpload, Loader2, X, CheckCircle2, AlertCircle, Ban, Youtube } from "lucide-react";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
