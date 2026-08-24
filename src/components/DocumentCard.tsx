@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, FileArchive, FileImage, FileText, FileVideo, FileType2, Lock, Globe } from "lucide-react";
+import { Eye, FileArchive, FileImage, FileText, FileVideo, FileType2, Lock, Globe, Youtube } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   categoryLabel,
@@ -15,6 +15,7 @@ const ICONS = {
   pdf: FileText,
   image: FileImage,
   video: FileVideo,
+  youtube: Youtube,
   office: FileType2,
   text: FileText,
   archive: FileArchive,

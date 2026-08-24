@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { CloudUpload, Loader2, X, CheckCircle2, AlertCircle, Ban } from "lucide-react";
+import { CloudUpload, Loader2, X, CheckCircle2, AlertCircle, Ban, Youtube } from "lucide-react";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,15 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth, canUpload } from "@/hooks/useAuth";
-import { CATEGORIES, LEVELS, SUBJECTS, VISIBILITIES, formatSize } from "@/lib/taxonomy";
+import {
+  CATEGORIES,
+  LEVELS,
+  SUBJECTS,
+  VISIBILITIES,
+  YOUTUBE_MIME,
+  formatSize,
+} from "@/lib/taxonomy";
+import { youtubeId } from "@/components/viewers/YoutubeEmbed";
 import {
   ACCEPT_ATTRIBUTE,
   ACCEPTED,
@@ -85,6 +93,57 @@ function UploadPage() {
   const [tagsInput, setTagsInput] = useState("");
   const [visibility, setVisibility] = useState<string>("users");
   const [allowDownload, setAllowDownload] = useState(true);
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [youtubeTitle, setYoutubeTitle] = useState("");
+
+  const addYoutube = async () => {
+    if (!user) return;
+    const videoId = youtubeId(youtubeUrl);
+    if (!videoId) {
+      toast.error("Lien YouTube invalide.");
+      return;
+    }
+    const title = youtubeTitle.trim() || `Vidéo YouTube ${videoId}`;
+    const tags = tagsInput
+      .split(",")
+      .map((tag) => tag.trim().toLowerCase())
+      .filter(Boolean);
+
+    setBusy(true);
+    const { data, error } = await supabase
+      .from("documents")
+      .insert({
+        name: title,
+        filename: `${videoId}.youtube`,
+        mime_type: YOUTUBE_MIME,
+        size: 0,
+        storage_path: `https://www.youtube.com/watch?v=${videoId}`,
+        description: description.trim() || null,
+        level: level as "college",
+        subject,
+        category,
+        tags,
+        author_id: user.id,
+        author_name: profile?.full_name ?? user.email ?? null,
+        school_year: schoolYear || null,
+        visibility: visibility as "private",
+        allow_download: false,
+      })
+      .select("id")
+      .single();
+    setBusy(false);
+
+    if (error || !data) {
+      toast.error(error?.message ?? "Enregistrement impossible");
+      return;
+    }
+    setYoutubeUrl("");
+    setYoutubeTitle("");
+    toast.success("Vidéo YouTube ajoutée");
+    void navigate({ to: "/documents/$id", params: { id: data.id } });
+  };
+
+
 
   const patch = (id: string, next: Partial<QueueItem>) =>
     setItems((list) => list.map((item) => (item.id === id ? { ...item, ...next } : item)));
@@ -279,6 +338,39 @@ function UploadPage() {
             }}
           />
         </div>
+
+        <div className="surface-card mt-4 p-4">
+          <Label htmlFor="youtube-url" className="flex items-center gap-2">
+            <Youtube className="size-4 text-muted-foreground" /> Vidéo YouTube (intégrée)
+          </Label>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Collez un lien YouTube : la vidéo sera consultable directement dans le lecteur, avec les
+            mêmes métadonnées et droits que ci-dessous.
+          </p>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <Input
+              id="youtube-url"
+              value={youtubeUrl}
+              placeholder="https://www.youtube.com/watch?v=..."
+              onChange={(event) => setYoutubeUrl(event.target.value)}
+            />
+            <Input
+              value={youtubeTitle}
+              placeholder="Titre de la vidéo"
+              onChange={(event) => setYoutubeTitle(event.target.value)}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              disabled={busy || !youtubeUrl.trim()}
+              onClick={() => void addYoutube()}
+            >
+              Ajouter
+            </Button>
+          </div>
+        </div>
+
+
 
         {items.length ? (
           <ul className="mt-4 space-y-2">

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { fileKind } from "@/lib/taxonomy";
 import { ImageViewer } from "./ImageViewer";
 import { VideoPlayer } from "./VideoPlayer";
+import { YoutubeEmbed } from "./YoutubeEmbed";
 
 // pdf.js touches browser-only globals (DOMMatrix), so it must never be
 // imported during SSR.
@@ -38,6 +39,10 @@ export function DocumentViewer({
   onProgress,
 }: Props) {
   const kind = fileKind(mime);
+
+  if (kind === "youtube") {
+    return <YoutubeEmbed url={url} name={name} startAt={initialPosition} />;
+  }
 
   if (kind === "pdf") {
     return (
