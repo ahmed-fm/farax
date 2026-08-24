@@ -202,9 +202,11 @@ function DocumentPage() {
               ) : null}
 
               <div className="mt-5 grid gap-2">
-                <Button onClick={() => void download()}>
-                  <Download className="mr-2 size-4" /> Télécharger
-                </Button>
+                {isYoutube ? null : (
+                  <Button onClick={() => void download()}>
+                    <Download className="mr-2 size-4" /> Télécharger
+                  </Button>
+                )}
                 {canManage ? (
                   <Button variant="outline" onClick={() => void destroy()}>
                     Supprimer ce document
