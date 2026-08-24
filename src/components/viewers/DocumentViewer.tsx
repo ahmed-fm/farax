@@ -39,6 +39,10 @@ export function DocumentViewer({
 }: Props) {
   const kind = fileKind(mime);
 
+  if (kind === "youtube") {
+    return <YoutubeEmbed url={url} name={name} startAt={initialPosition} />;
+  }
+
   if (kind === "pdf") {
     return (
       <ClientOnly fallback={<ViewerFallback />}>
