@@ -19,7 +19,15 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth, canUpload } from "@/hooks/useAuth";
-import { CATEGORIES, LEVELS, SUBJECTS, VISIBILITIES, formatSize } from "@/lib/taxonomy";
+import {
+  CATEGORIES,
+  LEVELS,
+  SUBJECTS,
+  VISIBILITIES,
+  YOUTUBE_MIME,
+  formatSize,
+} from "@/lib/taxonomy";
+import { youtubeId } from "@/components/viewers/YoutubeEmbed";
 import {
   ACCEPT_ATTRIBUTE,
   ACCEPTED,
