@@ -25,6 +25,7 @@ export type DocumentRow = {
 
 export type DocFilters = {
   level?: string | undefined;
+  grade?: string | undefined;
   subject?: string | undefined;
   category?: string | undefined;
   q?: string | undefined;
@@ -54,6 +55,7 @@ export async function listDocuments(filters: DocFilters, userId?: string | null)
     .range((page - 1) * pageSize, page * pageSize - 1);
 
   if (filters.level) query = query.eq("level", filters.level as "college");
+  if (filters.grade) query = query.eq("school_year", filters.grade);
   if (filters.subject) query = query.eq("subject", filters.subject);
   if (filters.category) query = query.eq("category", filters.category);
   if (filters.author) query = query.ilike("author_name", `%${filters.author}%`);
