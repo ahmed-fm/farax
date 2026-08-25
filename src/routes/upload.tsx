@@ -496,12 +496,27 @@ function UploadPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Année scolaire">
-              <Input
-                value={schoolYear}
-                onChange={(event) => setSchoolYear(event.target.value)}
-                placeholder="2025-2026"
-              />
+            <Field label="Niveau">
+              {grades.length ? (
+                <Select value={schoolYear} onValueChange={setSchoolYear}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un niveau" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {grades.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  value={schoolYear}
+                  onChange={(event) => setSchoolYear(event.target.value)}
+                  placeholder="L1, L2, M1…"
+                />
+              )}
             </Field>
             <Field label="Mots-clés (séparés par des virgules)">
               <Input
