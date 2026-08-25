@@ -26,6 +26,7 @@ import {
   VISIBILITIES,
   YOUTUBE_MIME,
   formatSize,
+  gradesForLevel,
 } from "@/lib/taxonomy";
 import { youtubeId } from "@/components/viewers/YoutubeEmbed";
 import {
