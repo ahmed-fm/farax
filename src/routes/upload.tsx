@@ -89,7 +89,12 @@ function UploadPage() {
   const [level, setLevel] = useState<string>("lycee");
   const [subject, setSubject] = useState<string>("mathematiques");
   const [category, setCategory] = useState<string>("cours");
-  const [schoolYear, setSchoolYear] = useState("");
+  const [schoolYear, setSchoolYear] = useState<string>("seconde");
+  const grades = gradesForLevel(level);
+  const changeLevel = (value: string) => {
+    setLevel(value);
+    setSchoolYear(gradesForLevel(value)[0]?.value ?? "");
+  };
   const [tagsInput, setTagsInput] = useState("");
   const [visibility, setVisibility] = useState<string>("users");
   const [allowDownload, setAllowDownload] = useState(true);
