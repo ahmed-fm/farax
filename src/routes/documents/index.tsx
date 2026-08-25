@@ -14,12 +14,22 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { listDocuments } from "@/lib/documents";
-import { CATEGORIES, LEVELS, SUBJECTS, categoryLabel, levelLabel, subjectLabel } from "@/lib/taxonomy";
+import {
+  CATEGORIES,
+  LEVELS,
+  SUBJECTS,
+  categoryLabel,
+  gradeLabel,
+  gradesForLevel,
+  levelLabel,
+  subjectLabel,
+} from "@/lib/taxonomy";
 import { useAuth } from "@/hooks/useAuth";
 
 type Search = {
   q?: string | undefined;
   level?: string | undefined;
+  grade?: string | undefined;
   subject?: string | undefined;
   category?: string | undefined;
   format?: string | undefined;
@@ -36,6 +46,7 @@ export const Route = createFileRoute("/documents/")({
     return {
       q: str("q"),
       level: str("level"),
+      grade: str("grade"),
       subject: str("subject"),
       category: str("category"),
       format: str("format"),
@@ -100,6 +111,12 @@ function DocumentsPage() {
                 <BreadcrumbItem>{levelLabel(search.level)}</BreadcrumbItem>
               </>
             ) : null}
+            {search.grade ? (
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>{gradeLabel(search.grade)}</BreadcrumbItem>
+              </>
+            ) : null}
             {search.subject ? (
               <>
                 <BreadcrumbSeparator />
@@ -131,10 +148,16 @@ function DocumentsPage() {
 
         <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-5">
           <FilterSelect
-            label="Niveau"
+            label="Établissement"
             value={search.level}
             options={LEVELS}
             onChange={(v) => void setParam("level", v)}
+          />
+          <FilterSelect
+            label="Niveau"
+            value={search.grade}
+            options={gradesForLevel(search.level).length ? gradesForLevel(search.level) : GRADE_OPTIONS}
+            onChange={(v) => void setParam("grade", v)}
           />
           <FilterSelect
             label="Matière"
@@ -180,7 +203,7 @@ function DocumentsPage() {
             >
               <Filter className="mr-2 size-3.5" /> Mes documents
             </Button>
-            {(["level", "subject", "category", "format", "since", "q"] as const)
+            {(["level", "grade", "subject", "category", "format", "since", "q"] as const)
               .filter((key) => search[key])
               .map((key) => (
                 <Badge
