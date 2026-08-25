@@ -451,8 +451,8 @@ function UploadPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <Field label="Niveau">
-              <Select value={level} onValueChange={setLevel}>
+            <Field label="Établissement">
+              <Select value={level} onValueChange={changeLevel}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
