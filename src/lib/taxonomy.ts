@@ -83,14 +83,7 @@ export const ACCEPTED_MIME = [
 export const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200 Mo
 
 export type FileKind =
-  | "pdf"
-  | "image"
-  | "video"
-  | "youtube"
-  | "office"
-  | "text"
-  | "archive"
-  | "other";
+  "pdf" | "image" | "video" | "youtube" | "office" | "text" | "archive" | "other";
 
 export const YOUTUBE_MIME = "video/x-youtube";
 

@@ -79,16 +79,15 @@ Autres
 Exemple :
 
 Lycée
- └── Mathématiques
-      ├── Cours
-      │    ├── Fonctions.pdf
-      │    └── Dérivées.pdf
-      ├── Exercices
-      │    ├── Exercice_01.pdf
-      │    └── Exercice_02.pdf
-      └── Corrigés
-           └── Corrige_01.pdf
-
+└── Mathématiques
+├── Cours
+│ ├── Fonctions.pdf
+│ └── Dérivées.pdf
+├── Exercices
+│ ├── Exercice_01.pdf
+│ └── Exercice_02.pdf
+└── Corrigés
+└── Corrige_01.pdf
 
 L'utilisateur doit pouvoir naviguer dans cette arborescence facilement.
 
@@ -335,7 +334,6 @@ Professeur :
 Administrateur :
 ✓ toutes les permissions
 
-
 Les permissions doivent être vérifiées côté serveur, pas uniquement dans l'interface.
 
 8. Groupes / classes
@@ -343,17 +341,16 @@ Les permissions doivent être vérifiées côté serveur, pas uniquement dans l'
 Permettre de créer des groupes :
 
 Lycée
- ├── Seconde A
- ├── Seconde B
- ├── Première
- └── Terminale
+├── Seconde A
+├── Seconde B
+├── Première
+└── Terminale
 
 Université
- ├── L1 Informatique
- ├── L2 Informatique
- ├── L3 Informatique
- └── Master
-
+├── L1 Informatique
+├── L2 Informatique
+├── L3 Informatique
+└── Master
 
 Un document peut être partagé avec un groupe.
 
@@ -394,24 +391,22 @@ Mes matières
 
 Mes classes
 
-
 10. Interface desktop
 
 Sur desktop, utiliser une interface avec :
 
 ┌──────────────────────────────────────────────┐
-│ Logo       Recherche              Profil    │
+│ Logo Recherche Profil │
 ├────────────┬─────────────────────────────────┤
-│            │                                 │
-│ Dashboard  │       Contenu                   │
-│ Documents  │                                 │
-│ Collège    │                                 │
-│ Lycée      │                                 │
-│ Université │                                 │
-│ Favoris    │                                 │
-│            │                                 │
+│ │ │
+│ Dashboard │ Contenu │
+│ Documents │ │
+│ Collège │ │
+│ Lycée │ │
+│ Université │ │
+│ Favoris │ │
+│ │ │
 └────────────┴─────────────────────────────────┘
-
 
 Utiliser une sidebar permettant de naviguer rapidement entre les niveaux, matières et catégories.
 
@@ -492,6 +487,7 @@ Ne jamais stocker directement les fichiers binaires dans la base de données.
 La base de données doit stocker les métadonnées :
 
 Document
+
 - id
 - name
 - filename
@@ -507,7 +503,6 @@ Document
 - created_at
 - updated_at
 
-
 Prévoir également :
 
 User
@@ -521,7 +516,6 @@ Subject
 Upload
 ViewHistory
 Favorite
-
 
 14. Sécurité
 

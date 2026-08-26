@@ -91,7 +91,9 @@ export function VideoPlayer({
         ) : null}
       </div>
       {resumed ? (
-        <p className="px-3 pb-2 text-xs text-muted-foreground">Lecture reprise où vous vous étiez arrêté.</p>
+        <p className="px-3 pb-2 text-xs text-muted-foreground">
+          Lecture reprise où vous vous étiez arrêté.
+        </p>
       ) : null}
     </div>
   );

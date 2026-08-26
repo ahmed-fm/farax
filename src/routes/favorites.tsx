@@ -12,10 +12,14 @@ export const Route = createFileRoute("/favorites")({
       { title: "Mes favoris — Studia" },
       {
         name: "description",
-        content: "Retrouvez en un clin d'œil les documents pédagogiques que vous avez mis en favori.",
+        content:
+          "Retrouvez en un clin d'œil les documents pédagogiques que vous avez mis en favori.",
       },
       { property: "og:title", content: "Mes favoris — Studia" },
-      { property: "og:description", content: "Vos documents pédagogiques favoris, réunis au même endroit." },
+      {
+        property: "og:description",
+        content: "Vos documents pédagogiques favoris, réunis au même endroit.",
+      },
     ],
   }),
   component: FavoritesPage,

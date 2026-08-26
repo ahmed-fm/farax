@@ -54,7 +54,8 @@ const startsWith = (bytes: Uint8Array, signature: number[], offset = 0) =>
 export async function verifySignature(file: File, mime: string): Promise<boolean> {
   const head = new Uint8Array(await file.slice(0, 16).arrayBuffer());
 
-  const isZip = startsWith(head, [0x50, 0x4b, 0x03, 0x04]) || startsWith(head, [0x50, 0x4b, 0x05, 0x06]);
+  const isZip =
+    startsWith(head, [0x50, 0x4b, 0x03, 0x04]) || startsWith(head, [0x50, 0x4b, 0x05, 0x06]);
   const isOle = startsWith(head, [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]);
 
   switch (mime) {
@@ -65,7 +66,9 @@ export async function verifySignature(file: File, mime: string): Promise<boolean
     case "image/png":
       return startsWith(head, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
     case "image/webp":
-      return startsWith(head, [0x52, 0x49, 0x46, 0x46]) && startsWith(head, [0x57, 0x45, 0x42, 0x50], 8);
+      return (
+        startsWith(head, [0x52, 0x49, 0x46, 0x46]) && startsWith(head, [0x57, 0x45, 0x42, 0x50], 8)
+      );
     case "video/mp4":
       return startsWith(head, [0x66, 0x74, 0x79, 0x70], 4);
     case "video/webm":

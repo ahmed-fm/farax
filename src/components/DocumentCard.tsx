@@ -1,5 +1,15 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, FileArchive, FileImage, FileText, FileVideo, FileType2, Lock, Globe, Youtube } from "lucide-react";
+import {
+  Eye,
+  FileArchive,
+  FileImage,
+  FileText,
+  FileVideo,
+  FileType2,
+  Lock,
+  Globe,
+  Youtube,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   categoryLabel,

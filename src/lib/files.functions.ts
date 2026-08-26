@@ -10,10 +10,8 @@ const BUCKET = "documents";
  * Works for anonymous callers on public documents.
  */
 export const getFileUrl = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) =>
-    z
-      .object({ documentId: z.string().uuid(), download: z.boolean().optional() })
-      .parse(data),
+  .validator((data: unknown) =>
+    z.object({ documentId: z.string().uuid(), download: z.boolean().optional() }).parse(data),
   )
   .handler(async ({ data }) => {
     const { callerClient, callerUserId } = await import("@/lib/supabase.server");
@@ -50,9 +48,11 @@ export const getFileUrl = createServerFn({ method: "POST" })
     if (error || !signed) throw new Error("SIGNING_FAILED");
 
     if (userId) {
-      await supabaseAdmin
-        .from("access_logs")
-        .insert({ user_id: userId, document_id: doc.id, action: data.download ? "download" : "view" });
+      await supabaseAdmin.from("access_logs").insert({
+        user_id: userId,
+        document_id: doc.id,
+        action: data.download ? "download" : "view",
+      });
     }
 
     return { url: signed.signedUrl, mime: doc.mime_type, filename: doc.filename };
@@ -61,7 +61,7 @@ export const getFileUrl = createServerFn({ method: "POST" })
 /** Deletes a document (row + stored file) after checking ownership/admin rights. */
 export const deleteDocument = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) => z.object({ documentId: z.string().uuid() }).parse(data))
+  .validator((data: unknown) => z.object({ documentId: z.string().uuid() }).parse(data))
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -96,7 +96,7 @@ const metadataSchema = z.object({
 /** Updates document metadata; RLS restricts this to the author or an admin. */
 export const updateDocument = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) => metadataSchema.parse(data))
+  .validator((data: unknown) => metadataSchema.parse(data))
   .handler(async ({ data, context }) => {
     const { documentId, ...fields } = data;
     const { data: row, error } = await context.supabase
@@ -113,7 +113,7 @@ export const updateDocument = createServerFn({ method: "POST" })
 /** Replaces the classes a document is shared with. */
 export const shareWithGroups = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) =>
+  .validator((data: unknown) =>
     z
       .object({
         documentId: z.string().uuid(),
@@ -145,7 +145,7 @@ export const shareWithGroups = createServerFn({ method: "POST" })
 /** Grants or revokes fine-grained rights for one user on one document. */
 export const setUserPermission = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) =>
+  .validator((data: unknown) =>
     z
       .object({
         documentId: z.string().uuid(),
@@ -188,7 +188,6 @@ export const adminStats = createServerFn({ method: "GET" })
       .select("role")
       .eq("user_id", context.userId);
     if (!(roles ?? []).some((r) => r.role === "admin")) throw new Error("FORBIDDEN");
-
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const [users, docs, logs, storage] = await Promise.all([

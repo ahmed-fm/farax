@@ -133,7 +133,11 @@ export function PdfViewer({ url, name, allowDownload, onDownload }: Props) {
             aria-label="Rechercher dans le PDF"
           />
           <Button type="submit" variant="ghost" size="icon" aria-label="Lancer la recherche">
-            {searching ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
+            {searching ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Search className="size-4" />
+            )}
           </Button>
           <Button
             type="button"

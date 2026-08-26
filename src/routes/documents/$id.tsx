@@ -110,7 +110,6 @@ function DocumentPage() {
 
   const canManage = Boolean(user && doc && doc.author_id === user.id);
 
-
   const share = async () => {
     await navigator.clipboard.writeText(window.location.href);
     toast.success("Lien copié dans le presse-papiers");
