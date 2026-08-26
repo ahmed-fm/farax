@@ -5,7 +5,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 /** Records a document view (counter, history, audit log) after an RLS read check. */
 export const registerViewFn = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) =>
+  .validator((data: unknown) =>
     z.object({ documentId: z.string().uuid(), position: z.number().optional() }).parse(data),
   )
   .handler(async ({ data, context }) => {
@@ -44,7 +44,7 @@ export const registerViewFn = createServerFn({ method: "POST" })
 /** Tells the client whether the signed-in user may download a document. */
 export const canDownloadFn = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) => z.object({ documentId: z.string().uuid() }).parse(data))
+  .validator((data: unknown) => z.object({ documentId: z.string().uuid() }).parse(data))
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: allowed } = await supabaseAdmin.rpc("can_download_document", {

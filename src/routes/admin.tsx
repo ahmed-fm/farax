@@ -12,10 +12,14 @@ export const Route = createFileRoute("/admin")({
       { title: "Administration — Studia" },
       {
         name: "description",
-        content: "Supervisez les utilisateurs, les documents et les accès de la plateforme pédagogique.",
+        content:
+          "Supervisez les utilisateurs, les documents et les accès de la plateforme pédagogique.",
       },
       { property: "og:title", content: "Administration — Studia" },
-      { property: "og:description", content: "Tableau d'administration de la bibliothèque pédagogique." },
+      {
+        property: "og:description",
+        content: "Tableau d'administration de la bibliothèque pédagogique.",
+      },
     ],
   }),
   component: AdminPage,

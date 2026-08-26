@@ -9,6 +9,7 @@ Le projet n'est pas encore relié à GitHub. La connexion se fait depuis Lovable
 Vérifié dans le code et dans la base.
 
 Réel (branché sur la base et le stockage) :
+
 - Tables : `profiles`, `user_roles`, `documents`, `document_permissions`, `groups`, `group_members`, `favorites`, `view_history`, `access_logs`, `subjects`, `categories`.
 - Relations réelles par clés étrangères (documents → auteur, permissions → document/utilisateur/groupe, membres → groupe/utilisateur).
 - Stockage : bucket privé `documents` (les fichiers ne sont pas en base). Lecture par URL signée temporaire.
@@ -18,6 +19,7 @@ Réel (branché sur la base et le stockage) :
 - Favoris, historique de lecture, journal d'accès : réels.
 
 Partiel ou simulé :
+
 - Base vide : 0 document, 0 profil, 0 classe, 0 fichier. Rien n'a encore été testé avec de vraies données.
 - Upload : un seul fichier à la fois, barre de progression factice (animation, pas la progression réseau), pas d'annulation, validation MIME uniquement sur l'extension déclarée par le navigateur.
 - Lecteur PDF : simple `iframe` du navigateur — pas de pagination, zoom, ni recherche pilotés par l'application.
@@ -32,6 +34,7 @@ Partiel ou simulé :
 ## 2. Ce que je vais construire
 
 ### Backend et base
+
 - Hiérarchie de classes : `groups` gagne `parent_id` + `slug` (Lycée → Terminale → Terminale A), lecture récursive.
 - Table `document_groups` (partage d'un document avec une ou plusieurs classes) et rôle de membre (`student` / `teacher`) dans `group_members`.
 - Colonne `deleted_at` déjà présente : activation d'une vraie corbeille (masquée partout, restauration admin/auteur).
@@ -40,6 +43,7 @@ Partiel ou simulé :
 - Jeu de données de démonstration inséré en migration (classes, matières, quelques documents publics) pour que l'application ne soit pas vide.
 
 ### Upload réel
+
 - Glisser-déposer + sélection multiple, file d'attente avec état par fichier.
 - Progression réseau réelle (upload XHR/`fetch` avec suivi), annulation par fichier, reprise après erreur.
 - Validation MIME par signature binaire (magic bytes) en plus du type déclaré, limite de taille configurable (par défaut 200 Mo, ajustable côté admin).
@@ -47,28 +51,34 @@ Partiel ou simulé :
 - Métadonnées communes appliquées au lot, puis ajustables document par document.
 
 ### Lecteurs
+
 - PDF : `pdf.js` (react-pdf) avec pagination, zoom, recherche texte, plein écran, téléchargement conditionné à la permission.
 - Images : zoom molette/pincement, déplacement, rotation, plein écran.
 - Vidéos : lecteur HTML5 avec lecture/pause, volume, barre de progression, vitesse, plein écran et reprise à la position enregistrée dans `view_history`.
 - Office : aperçu via l'embed Office Online alimenté par une URL signée temporaire ; si l'aperçu échoue ou si le partage externe est refusé, repli sur téléchargement/ouverture selon les droits. TXT : rendu direct.
 
 ### Permissions (RBAC + ACL)
+
 - Matrice appliquée côté base : étudiant (lecture, téléchargement si autorisé), professeur (tout sur ses documents), admin (tout).
 - Interface de partage par document : utilisateur, classe, niveau, matière, avec cases read/download/edit/delete/share.
 - Aucun accès fichier sans passage par la vérification serveur : les URLs signées sont émises uniquement après contrôle, durée courte.
 
 ### Classes
+
 - Création/édition de classes et sous-classes, ajout de professeurs et d'étudiants, documents rattachés à la classe.
 - Vue classe : membres + documents partagés.
 
 ### Recherche
+
 - Colonne `tsvector` générée (nom, description, tags) avec index GIN et tri par pertinence, tout en gardant les filtres existants ; structure prête pour indexer plus tard le texte extrait des PDF.
 
 ### Mobile / PWA
+
 - Passage réel de chaque écran en 375 px : connexion, tableau de bord, navigation, recherche, upload, lecteurs, documents, classes, favoris — cibles tactiles, barres d'action collantes, lecteurs plein écran.
 - Icônes 192/512, écran de démarrage, service worker mis à jour (cache des ressources statiques uniquement, jamais des documents privés).
 
 ### Audit final
+
 Rapport livré en fin de travaux : fonctionnel (réel / mocké / implémenté), backend (tables, relations, API, stockage), sécurité (modèle de permissions, protection fichiers et API), frontend (pages, composants, responsive, lecteurs), puis la liste des extensions prêtes architecturalement (OCR, plein texte PDF, transcription vidéo, IA, annotations, commentaires, versioning, notifications, corbeille, partage par lien).
 
 ## 3. Ordre d'exécution

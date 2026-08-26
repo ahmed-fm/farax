@@ -5,11 +5,20 @@ self.addEventListener("install", (e) => {
 });
 self.addEventListener("activate", (e) => {
   e.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))),
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))),
   );
 });
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
-  if (e.request.method !== "GET" || url.pathname.startsWith("/~oauth") || url.origin !== self.location.origin) return;
-  e.respondWith(fetch(e.request).catch(() => caches.match(e.request).then((r) => r || caches.match("/"))));
+  if (
+    e.request.method !== "GET" ||
+    url.pathname.startsWith("/~oauth") ||
+    url.origin !== self.location.origin
+  )
+    return;
+  e.respondWith(
+    fetch(e.request).catch(() => caches.match(e.request).then((r) => r || caches.match("/"))),
+  );
 });

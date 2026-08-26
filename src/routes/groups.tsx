@@ -12,10 +12,14 @@ export const Route = createFileRoute("/groups")({
       { title: "Mes classes — Studia" },
       {
         name: "description",
-        content: "Consultez les classes et groupes auxquels vous appartenez et les documents partagés.",
+        content:
+          "Consultez les classes et groupes auxquels vous appartenez et les documents partagés.",
       },
       { property: "og:title", content: "Mes classes — Studia" },
-      { property: "og:description", content: "Classes, groupes et partages de documents pédagogiques." },
+      {
+        property: "og:description",
+        content: "Classes, groupes et partages de documents pédagogiques.",
+      },
     ],
   }),
   component: GroupsPage,

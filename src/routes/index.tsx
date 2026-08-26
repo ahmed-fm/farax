@@ -20,7 +20,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Studia — Gestion de documents pédagogiques" },
       {
         property: "og:description",
-        content: "Une bibliothèque pédagogique moderne : classement, lecteur intégré et partage sécurisé.",
+        content:
+          "Une bibliothèque pédagogique moderne : classement, lecteur intégré et partage sécurisé.",
       },
     ],
   }),
@@ -47,8 +48,8 @@ function Dashboard() {
         <section className="hero-gradient relative overflow-hidden rounded-2xl p-7 text-primary-foreground md:p-10">
           <Sparkles className="absolute -right-6 -top-6 size-40 opacity-10" />
           <h1 className="max-w-2xl font-display text-3xl font-semibold leading-tight md:text-4xl">
-            {profile?.full_name ? `Bonjour ${profile.full_name.split(" ")[0]},` : "Bienvenue,"} votre
-            bibliothèque pédagogique est prête.
+            {profile?.full_name ? `Bonjour ${profile.full_name.split(" ")[0]},` : "Bienvenue,"}{" "}
+            votre bibliothèque pédagogique est prête.
           </h1>
           <p className="mt-3 max-w-xl text-primary-foreground/85">
             Retrouvez vos cours, exercices, corrigés et annales, classés par niveau et par matière —

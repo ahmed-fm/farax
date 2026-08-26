@@ -53,7 +53,8 @@ export const Route = createFileRoute("/upload")({
       { property: "og:title", content: "Importer des documents — Studia" },
       {
         property: "og:description",
-        content: "Import multiple par glisser-déposer avec métadonnées pédagogiques et permissions.",
+        content:
+          "Import multiple par glisser-déposer avec métadonnées pédagogiques et permissions.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -149,8 +150,6 @@ function UploadPage() {
     void navigate({ to: "/documents/$id", params: { id: data.id } });
   };
 
-
-
   const patch = (id: string, next: Partial<QueueItem>) =>
     setItems((list) => list.map((item) => (item.id === id ? { ...item, ...next } : item)));
 
@@ -170,7 +169,9 @@ function UploadPage() {
       }
       const valid = await verifySignature(file, mime);
       if (!valid) {
-        toast.error(`${file.name} : le contenu ne correspond pas au format ${ACCEPTED[mime]?.label}.`);
+        toast.error(
+          `${file.name} : le contenu ne correspond pas au format ${ACCEPTED[mime]?.label}.`,
+        );
         continue;
       }
       accepted.push({
@@ -376,8 +377,6 @@ function UploadPage() {
           </div>
         </div>
 
-
-
         {items.length ? (
           <ul className="mt-4 space-y-2">
             {items.map((item) => (
@@ -430,9 +429,7 @@ function UploadPage() {
                 {item.status === "uploading" || item.status === "done" ? (
                   <Progress value={item.progress} className="mt-2 h-1.5" />
                 ) : null}
-                {item.error ? (
-                  <p className="mt-2 text-xs text-destructive">{item.error}</p>
-                ) : null}
+                {item.error ? <p className="mt-2 text-xs text-destructive">{item.error}</p> : null}
               </li>
             ))}
           </ul>

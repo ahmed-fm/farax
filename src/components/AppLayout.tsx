@@ -172,7 +172,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 <p className="text-sm font-medium">{profile?.full_name ?? "Utilisateur"}</p>
                 <p className="text-xs capitalize text-muted-foreground">{role}</p>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => void signOut()} aria-label="Se déconnecter">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => void signOut()}
+                aria-label="Se déconnecter"
+              >
                 <LogOut className="size-4" />
               </Button>
             </div>
@@ -196,7 +201,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
           {[
             { to: "/", label: "Accueil", Icon: Home },
             { to: "/documents", label: "Documents", Icon: BookOpen },
-            { to: canUpload(role) ? "/upload" : "/favorites", label: canUpload(role) ? "Importer" : "Favoris", Icon: canUpload(role) ? Upload : Star },
+            {
+              to: canUpload(role) ? "/upload" : "/favorites",
+              label: canUpload(role) ? "Importer" : "Favoris",
+              Icon: canUpload(role) ? Upload : Star,
+            },
             { to: "/groups", label: "Classes", Icon: Users },
           ].map(({ to, label, Icon }) => (
             <Link

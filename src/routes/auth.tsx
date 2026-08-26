@@ -8,7 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/auth")({
@@ -48,7 +54,10 @@ function AuthPage() {
     setLoading(true);
     const signInEmail = creds?.email ?? email;
     const signInPassword = creds?.password ?? password;
-    const { error } = await supabase.auth.signInWithPassword({ email: signInEmail, password: signInPassword });
+    const { error } = await supabase.auth.signInWithPassword({
+      email: signInEmail,
+      password: signInPassword,
+    });
     setLoading(false);
     if (error) {
       toast.error(error.message);
@@ -109,7 +118,10 @@ function AuthPage() {
 
       <div className="flex items-center justify-center px-5 py-12">
         <div className="w-full max-w-sm">
-          <Link to="/" className="mb-8 flex items-center gap-2 font-display text-lg font-semibold lg:hidden">
+          <Link
+            to="/"
+            className="mb-8 flex items-center gap-2 font-display text-lg font-semibold lg:hidden"
+          >
             <GraduationCap className="size-5 text-primary" /> Studia
           </Link>
           <Tabs defaultValue="signin">
@@ -122,7 +134,13 @@ function AuthPage() {
               <form onSubmit={signIn} className="mt-6 space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">E-mail</Label>
-                  <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Mot de passe</Label>
@@ -144,11 +162,22 @@ function AuthPage() {
               <form onSubmit={signUp} className="mt-6 space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Nom complet</Label>
-                  <Input id="name" required value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                  <Input
+                    id="name"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email2">E-mail</Label>
-                  <Input id="email2" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input
+                    id="email2"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password2">Mot de passe</Label>

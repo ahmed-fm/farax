@@ -12,7 +12,13 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { listDocuments } from "@/lib/documents";
 import {
   CATEGORIES,
@@ -156,7 +162,9 @@ function DocumentsPage() {
           <FilterSelect
             label="Niveau"
             value={search.grade}
-            options={gradesForLevel(search.level).length ? gradesForLevel(search.level) : GRADE_OPTIONS}
+            options={
+              gradesForLevel(search.level).length ? gradesForLevel(search.level) : GRADE_OPTIONS
+            }
             onChange={(v) => void setParam("grade", v)}
           />
           <FilterSelect
@@ -235,7 +243,9 @@ function DocumentsPage() {
                   variant="outline"
                   disabled={page <= 1}
                   onClick={() =>
-                    void navigate({ search: (prev: Search) => ({ ...prev, page: page - 1 || undefined }) })
+                    void navigate({
+                      search: (prev: Search) => ({ ...prev, page: page - 1 || undefined }),
+                    })
                   }
                 >
                   Précédent
@@ -246,7 +256,9 @@ function DocumentsPage() {
                 <Button
                   variant="outline"
                   disabled={page >= pages}
-                  onClick={() => void navigate({ search: (prev: Search) => ({ ...prev, page: page + 1 }) })}
+                  onClick={() =>
+                    void navigate({ search: (prev: Search) => ({ ...prev, page: page + 1 }) })
+                  }
                 >
                   Suivant
                 </Button>
@@ -284,10 +296,7 @@ function FilterSelect({
   onChange: (value?: string) => void;
 }) {
   return (
-    <Select
-      value={value ?? "all"}
-      onValueChange={(v) => onChange(v === "all" ? undefined : v)}
-    >
+    <Select value={value ?? "all"} onValueChange={(v) => onChange(v === "all" ? undefined : v)}>
       <SelectTrigger className="w-full">
         <SelectValue placeholder={label} />
       </SelectTrigger>

@@ -86,9 +86,7 @@ export function DocumentViewer({
   return (
     <div className="surface-card flex flex-col items-center gap-3 p-10 text-center">
       <FileType2 className="size-8 text-muted-foreground" />
-      <p className="text-sm text-muted-foreground">
-        Aperçu indisponible pour ce format ({mime}).
-      </p>
+      <p className="text-sm text-muted-foreground">Aperçu indisponible pour ce format ({mime}).</p>
       {allowDownload ? (
         <Button onClick={onDownload}>
           <Download className="mr-2 size-4" /> Télécharger
