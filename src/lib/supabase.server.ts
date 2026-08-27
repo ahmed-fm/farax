@@ -2,6 +2,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getRequest } from "@tanstack/react-start/server";
 import type { Database } from "@/integrations/supabase/types";
+import { getSupabaseUrl, getSupabasePublishableKey } from "@/integrations/supabase/env";
 
 function isNewApiKey(value: string) {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
@@ -12,8 +13,8 @@ function isNewApiKey(value: string) {
  * Falls back to the anonymous role when no bearer token is present.
  */
 export function callerClient(): { client: SupabaseClient<Database>; token: string | null } {
-  const url = process.env["SUPABASE_URL"]!;
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
+  const url = getSupabaseUrl();
+  const key = getSupabasePublishableKey();
   const request = getRequest();
   const header = request?.headers?.get("authorization") ?? null;
   const token = header?.toLowerCase().startsWith("bearer ") ? header.slice(7).trim() : null;
