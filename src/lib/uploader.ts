@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getSupabaseUrl, getSupabasePublishableKey } from "@/integrations/supabase/env";
 
 export const BUCKET = "documents";
 
@@ -127,8 +128,8 @@ export function uploadToStorage(options: {
         return;
       }
 
-      const baseUrl = import.meta.env["VITE_SUPABASE_URL"] as string;
-      const apiKey = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] as string;
+      const baseUrl = getSupabaseUrl();
+      const apiKey = getSupabasePublishableKey();
 
       xhr.open("POST", `${baseUrl}/storage/v1/object/${BUCKET}/${options.path}`, true);
       xhr.setRequestHeader("Authorization", `Bearer ${token}`);
