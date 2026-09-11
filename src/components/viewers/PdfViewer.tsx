@@ -15,10 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url,
-).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 type Props = {
   url: string;
@@ -187,7 +184,14 @@ export function PdfViewer({ url, name, allowDownload, onDownload }: Props) {
 
       <div className="max-h-[75vh] overflow-auto bg-muted/40 p-3">
         {error ? (
-          <p className="py-16 text-center text-sm text-muted-foreground">{error}</p>
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <p className="text-sm text-muted-foreground">{error}</p>
+            {allowDownload ? (
+              <Button onClick={onDownload} variant="outline" className="mt-4">
+                <Download className="mr-2 size-4" /> Télécharger le fichier PDF
+              </Button>
+            ) : null}
+          </div>
         ) : (
           <Document
             file={url}
@@ -196,10 +200,14 @@ export function PdfViewer({ url, name, allowDownload, onDownload }: Props) {
               setNumPages(pdf.numPages);
               setError(null);
             }}
-            onLoadError={() => setError("Ce PDF n'a pas pu être chargé.")}
+            onLoadError={(err) => {
+              console.error("Erreur de chargement du PDF:", err);
+              setError("Ce PDF n'a pas pu être chargé. Assurez-vous d'avoir accès au fichier.");
+            }}
             loading={
-              <div className="flex justify-center py-20">
+              <div className="flex flex-col items-center justify-center py-20 gap-2">
                 <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">Chargement du document PDF…</span>
               </div>
             }
           >

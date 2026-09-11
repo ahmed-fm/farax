@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Filter, Loader2, SlidersHorizontal } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
@@ -22,6 +22,7 @@ import {
 import { listDocuments } from "@/lib/documents";
 import {
   CATEGORIES,
+  GRADES,
   LEVELS,
   SUBJECTS,
   categoryLabel,
@@ -107,7 +108,9 @@ function DocumentsPage() {
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+              <BreadcrumbLink asChild>
+                <Link to="/">Accueil</Link>
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>Documents</BreadcrumbItem>
@@ -162,9 +165,7 @@ function DocumentsPage() {
           <FilterSelect
             label="Niveau"
             value={search.grade}
-            options={
-              gradesForLevel(search.level).length ? gradesForLevel(search.level) : GRADE_OPTIONS
-            }
+            options={gradesForLevel(search.level).length ? gradesForLevel(search.level) : GRADES}
             onChange={(v) => void setParam("grade", v)}
           />
           <FilterSelect
