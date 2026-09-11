@@ -6,6 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  ExternalLink,
+  FileText,
   Loader2,
   Maximize2,
   Search,
@@ -15,7 +17,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+// Setup worker using unpkg worker code wrapped in a Blob URL to avoid cross-origin worker script blocking.
+if (typeof window !== "undefined") {
+  const workerCode = `importScripts("https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js");`;
+  try {
+    const blob = new Blob([workerCode], { type: "application/javascript" });
+    pdfjs.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
+  } catch {
+    pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+  }
+}
 
 type Props = {
   url: string;
@@ -34,6 +45,7 @@ export function PdfViewer({ url, name, allowDownload, onDownload }: Props) {
   const [searching, setSearching] = useState(false);
   const [matches, setMatches] = useState<number[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [useNative, setUseNative] = useState(false);
 
   useEffect(() => {
     const measure = () => {
@@ -145,6 +157,22 @@ export function PdfViewer({ url, name, allowDownload, onDownload }: Props) {
           >
             <Maximize2 className="size-4" />
           </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setUseNative((prev) => !prev)}
+            title={
+              useNative
+                ? "Utiliser le lecteur interactif"
+                : "Utiliser le lecteur natif du navigateur"
+            }
+            aria-label="Changer le mode de lecture"
+            className="text-xs gap-1"
+          >
+            <FileText className="size-3.5" />
+            {useNative ? "React PDF" : "Lecteur Natif"}
+          </Button>
           {allowDownload ? (
             <Button
               type="button"
@@ -183,14 +211,34 @@ export function PdfViewer({ url, name, allowDownload, onDownload }: Props) {
       ) : null}
 
       <div className="max-h-[75vh] overflow-auto bg-muted/40 p-3">
-        {error ? (
+        {useNative ? (
+          <div className="h-[70vh] w-full">
+            <iframe
+              src={url}
+              title={name}
+              className="h-full w-full rounded border border-border bg-background"
+            />
+          </div>
+        ) : error ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="text-sm text-muted-foreground">{error}</p>
-            {allowDownload ? (
-              <Button onClick={onDownload} variant="outline" className="mt-4">
-                <Download className="mr-2 size-4" /> Télécharger le fichier PDF
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              <Button onClick={() => setUseNative(true)} variant="default">
+                <ExternalLink className="mr-2 size-4" /> Ouvrir dans le lecteur natif
               </Button>
-            ) : null}
+              {allowDownload ? (
+                <Button onClick={onDownload} variant="outline">
+                  <Download className="mr-2 size-4" /> Télécharger le PDF
+                </Button>
+              ) : null}
+            </div>
+            <div className="mt-6 h-[60vh] w-full">
+              <iframe
+                src={url}
+                title={name}
+                className="h-full w-full rounded border border-border bg-background"
+              />
+            </div>
           </div>
         ) : (
           <Document
@@ -202,7 +250,7 @@ export function PdfViewer({ url, name, allowDownload, onDownload }: Props) {
             }}
             onLoadError={(err) => {
               console.error("Erreur de chargement du PDF:", err);
-              setError("Ce PDF n'a pas pu être chargé. Assurez-vous d'avoir accès au fichier.");
+              setError("Le lecteur interactif n'a pas pu afficher ce PDF.");
             }}
             loading={
               <div className="flex flex-col items-center justify-center py-20 gap-2">
