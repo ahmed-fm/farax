@@ -38,24 +38,63 @@ export const getFileUrl = createServerFn({ method: "POST" })
       if (!allowed) throw new Error("FORBIDDEN");
     }
 
-    const { data: signed, error } = await supabaseAdmin.storage
-      .from(BUCKET)
-      .createSignedUrl(
-        doc.storage_path,
-        data.download ? 120 : 900,
-        data.download ? { download: doc.filename } : undefined,
-      );
-    if (error || !signed) throw new Error("SIGNING_FAILED");
+    const { getSupabaseServiceRoleKey } = await import("@/integrations/supabase/env");
+    const hasServiceRoleKey = Boolean(getSupabaseServiceRoleKey());
 
-    if (userId) {
-      await supabaseAdmin.from("access_logs").insert({
-        user_id: userId,
-        document_id: doc.id,
-        action: data.download ? "download" : "view",
-      });
+    let signedUrlResult: string | undefined;
+
+    if (hasServiceRoleKey) {
+      const { data: signed, error } = await supabaseAdmin.storage
+        .from(BUCKET)
+        .createSignedUrl(
+          doc.storage_path,
+          data.download ? 120 : 900,
+          data.download ? { download: doc.filename } : undefined,
+        );
+      if (!error && signed) {
+        signedUrlResult = signed.signedUrl;
+      }
     }
 
-    return { url: signed.signedUrl, mime: doc.mime_type, filename: doc.filename };
+    if (!signedUrlResult) {
+      const { data: signed, error } = await client.storage
+        .from(BUCKET)
+        .createSignedUrl(
+          doc.storage_path,
+          data.download ? 120 : 900,
+          data.download ? { download: doc.filename } : undefined,
+        );
+      if (!error && signed) {
+        signedUrlResult = signed.signedUrl;
+      } else {
+        const { data: pub } = client.storage.from(BUCKET).getPublicUrl(doc.storage_path);
+        signedUrlResult = pub.publicUrl;
+      }
+    }
+
+    if (!signedUrlResult) throw new Error("SIGNING_FAILED");
+
+    if (userId) {
+      try {
+        if (hasServiceRoleKey) {
+          await supabaseAdmin.from("access_logs").insert({
+            user_id: userId,
+            document_id: doc.id,
+            action: data.download ? "download" : "view",
+          });
+        } else {
+          await client.from("access_logs").insert({
+            user_id: userId,
+            document_id: doc.id,
+            action: data.download ? "download" : "view",
+          });
+        }
+      } catch {
+        // Logging is best-effort
+      }
+    }
+
+    return { url: signedUrlResult, mime: doc.mime_type, filename: doc.filename };
   });
 
 /** Deletes a document (row + stored file) after checking ownership/admin rights. */
